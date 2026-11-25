@@ -1,0 +1,4 @@
+body.rtl, body.rtl .press-this a.wp-switch-editor,
+body.rtl.elementor-editor-active {
+    font-family: "Vazir", Arial, sans-serif;
+}
