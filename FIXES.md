@@ -1,6 +1,6 @@
 # فاز ۱ اصلاحات قالب Petrona — گزارش تغییرات
 
-**شاخه:** `fix/audit-phase-1` · **کامیت:** `7670162` · **۴۱ فایل تغییر یافته، ۸۱۰ خط افزوده، ۱٬۰۹۷ خط حذف‌شده**
+**شاخه:** `fix/audit-phase-1` · **کامیت‌ها:** `7670162` (کد) + `6d2fb21` (این سند) · **۴۲ فایل تغییر یافته، ۹۸۹ خط افزوده، ۱٬۰۹۷ خط حذف‌شده**
 **اعتبارسنجی:** `php -l` روی هر ۱۹۰ فایل PHP → بدون خطا · `node --check` روی JSهای تغییریافته → بدون خطا · PHPCS دوباره اجرا شد
 
 > ⚠️ **تصحیح گزارش قبلی — مهم:** در گزارش اولیه نوشتم که `Techt_Download_Handler::hook()` شیء برمی‌گرداند و روی هر درخواست `TypeError` می‌دهد. **این اشتباه بود.** کد واقعی در `main` این است:
@@ -166,7 +166,7 @@ foreach($_POST as $key => $value)              // هیچ nonce، هیچ capabili
 
 ```bash
 cd ~/petrona
-git log --oneline -1                  # 7670162
+git log --oneline -2                  # 6d2fb21 (docs) + 7670162 (code)
 git show --stat HEAD                  # ۴۱ فایل
 git diff main..fix/audit-phase-1 -- inc/modules/includes/login-register.php
 ```
