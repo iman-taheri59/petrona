@@ -24,7 +24,8 @@
 					type: 'POST',
 					data: {
 						action: 'get_posts_title_by_id',
-						id: ids
+						id: ids,
+						nonce: ( window.techt_nonce || '' )
 					},
 
 					success: function (results) {
@@ -60,6 +61,7 @@
 							return {
 								q: params.term, // search term
 								post_type: self.model.get('post_type'),
+								nonce: ( window.techt_nonce || '' ),
 								action: 'get_posts_by_query'
 							};
 						},

@@ -135,7 +135,7 @@ if( Techt_Utility::theme_options('blog_single_sidebar_display') == 'full' || !is
                                                 </div><!--  /.post-thumb -->
                                                 <div class="page-post-content">
                                                     <?php previous_post_link('%link', esc_html__('Older Post', 'petrona')); ?>
-                                                    <h3><a href="<?php echo esc_url( get_permalink(get_previous_post()->ID) ); ?>"><?php echo get_the_title(get_previous_post()); ?></a></h3>
+                                                    <h3><a href="<?php echo esc_url( get_permalink( get_previous_post()->ID ) ); ?>"><?php echo esc_html( get_the_title( get_previous_post() ) ); ?></a></h3>
                                                 </div><!--  /.post-content -->
                                             </div>
                                         </div><!--  /.text-left -->
@@ -147,7 +147,7 @@ if( Techt_Utility::theme_options('blog_single_sidebar_display') == 'full' || !is
                                             <div class="more-link-wrap next-posts">
                                                 <div class="page-post-content">
                                                     <?php next_post_link('%link', esc_html__('Newer Post', 'petrona')); ?>
-                                                    <h3><a href="<?php echo esc_url( get_permalink(get_next_post()->ID) ); ?>"><?php echo get_the_title(get_next_post()); ?></a></h3>
+                                                    <h3><a href="<?php echo esc_url( get_permalink( get_next_post()->ID ) ); ?>"><?php echo esc_html( get_the_title( get_next_post() ) ); ?></a></h3>
                                                 </div><!--  /.post-content -->
                                                 <div class="post-thumb">
                                                     <a class="post-link" href="<?php echo esc_url( get_permalink(get_next_post()->ID) ); ?>">

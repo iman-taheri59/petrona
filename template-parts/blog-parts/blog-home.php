@@ -64,7 +64,7 @@ $args = array(
                         techt_archive_title( '<h1 class="techt-title">', '</h1>' );
                         ?><?php 
                     } elseif ( is_search() ) { ?>
-                        <h1 class="techt-title"><span><?php esc_html_e( 'Search Results for : ', 'petrona' ) ?></span><?php echo get_search_query(); ?></h1><!--  /.techt-title -->
+                        <h1 class="techt-title"><span><?php esc_html_e( 'Search Results for : ', 'petrona' ) ?></span><?php echo esc_html( get_search_query() ); ?></h1><!--  /.techt-title -->
                     <?php } ?>
                 <?php else: ?>
                     <h1 class="techt-title" <?php techt_schema_markup('headline') ?>><?php echo wp_kses( Techt_Utility::theme_options( array('blog_title_info', __('Latest Articles','petrona') ) ), Techt_Static::html_allow() ); ?></h1>

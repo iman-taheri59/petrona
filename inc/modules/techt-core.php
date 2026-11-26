@@ -6,20 +6,27 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 $this_theme = wp_get_theme();
-define( 'TECHT_CORE_VERSION', $this_theme->get( 'Version' ) );
-define( 'TECHT_MADULES_PATH', ABSPATH . 'wp-content/themes/petrona/inc/modules' );
-define( 'TECHT_MADULES_URL', get_parent_theme_file_uri() . '/inc/modules' );
-define( 'TECHT_WIDGET_TEMPLATES_PATH', TECHT_MADULES_PATH . '/public/elementor/templates/' );
+if ( ! defined( 'TECHT_CORE_VERSION' ) ) {
+	define( 'TECHT_CORE_VERSION', $this_theme->get( 'Version' ) );
+}
+/*
+ * Never hard-code the theme folder name or ABSPATH layout: the theme may be
+ * installed in a renamed folder (e.g. petrona-main from a GitHub ZIP), run from
+ * a child theme, or use a custom WP_CONTENT_DIR. get_template_directory()
+ * resolves all of those correctly.
+ */
+if ( ! defined( 'TECHT_MADULES_PATH' ) ) {
+	define( 'TECHT_MADULES_PATH', get_template_directory() . '/inc/modules' );
+}
+if ( ! defined( 'TECHT_MADULES_URL' ) ) {
+	define( 'TECHT_MADULES_URL', get_template_directory_uri() . '/inc/modules' );
+}
+if ( ! defined( 'TECHT_WIDGET_TEMPLATES_PATH' ) ) {
+	define( 'TECHT_WIDGET_TEMPLATES_PATH', TECHT_MADULES_PATH . '/public/elementor/templates/' );
+}
 
 // require_once TECHT_MADULES_PATH . '/includes/class-techt-core-utility.php';
 require_once TECHT_MADULES_PATH . '/includes/class-techt-core.php';
-
-// include_once TECHT_MADULES_PATH . '/includes/ion-checker.php';
-// if (!empty($ioncube_error_checker)){
-//     add_action('admin_notices', function () use ($ioncube_error_checker){printf('<div class="notice notice-error notice-alt"> <p>%s</p> </div>',implode('<hr>',$ioncube_error_checker));},1);
-//     return;
-// }
-
 
 /**
  * @since    1.0.0

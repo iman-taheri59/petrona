@@ -1,3 +1,4 @@
+<?php $this->nonce_field(); ?>
 <div class="techt_metabox template-metaboxs">
 	<div class="techt_metabox_tab" id="techt_tab_template">
 		<?php 

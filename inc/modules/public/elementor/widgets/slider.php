@@ -443,7 +443,7 @@ class Techt_Slider extends Techt_Base {
 				'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} .tecSliderSlide:after',
 				'fields_options' => [
 					'background' => [
-						'label' => __('Color', 'pixel-gallery'),
+						'label' => __('Color', 'petrona'),
 						'default' => 'classic',
 					],
 					'color' => ['default' => 'rgba(0,0,0,0.3)'],
@@ -840,7 +840,7 @@ class Techt_Slider extends Techt_Base {
 			\Elementor\Group_Control_Border::get_type(),
 			[
 				'name' => 'item_title_border',
-				'label' => __( 'Border', 'plugin-domain' ),
+				'label' => __( 'Border', 'petrona' ),
 				'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} '. $css_scheme['title'],
 				'condition' => [ 
 					'item_custom_style' => 'yes',
@@ -1014,7 +1014,7 @@ class Techt_Slider extends Techt_Base {
 			\Elementor\Group_Control_Border::get_type(),
 			[
 				'name' => 'item_subtitle_border',
-				'label' => __( 'Border', 'plugin-domain' ),
+				'label' => __( 'Border', 'petrona' ),
 				'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} '. $css_scheme['subtitle'],
 				'condition' => [ 
 					'item_custom_style' => 'yes',
@@ -1177,7 +1177,7 @@ class Techt_Slider extends Techt_Base {
 			\Elementor\Group_Control_Border::get_type(),
 			[
 				'name' => 'item_desc_border',
-				'label' => __( 'Border', 'plugin-domain' ),
+				'label' => __( 'Border', 'petrona' ),
 				'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} '. $css_scheme['desc'],
 				'condition' => [ 
 					'item_custom_style' => 'yes',
@@ -1369,7 +1369,7 @@ class Techt_Slider extends Techt_Base {
 			\Elementor\Group_Control_Border::get_type(),
 			[
 				'name' => 'item_button_border',
-				'label' => __( 'Border', 'plugin-domain' ),
+				'label' => __( 'Border', 'petrona' ),
 				'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} '. $css_scheme['buttons'],
 				'condition' => [ 
 					'item_custom_style' => 'yes',

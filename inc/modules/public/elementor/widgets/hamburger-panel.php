@@ -811,6 +811,8 @@ class Techt_Hamburger_Panel extends Techt_Base {
 				// 'templateApiUrl' => $rest_api_url . 'jet-blocks-api/v1/elementor-template',
 				'devMode'        => is_user_logged_in() ? 'true' : 'false',
 				'restNonce'      => wp_create_nonce( 'wp_rest' ),
+				// Nonce consumed by check_ajax_referer( 'techt-addons' ) on the server.
+				'addonsNonce'    => wp_create_nonce( 'techt-addons' ),
 			)
 		);
 		wp_localize_script( 'techt-frontend-widget-scripts', 'techt_hamburger_panel_settings', $techt_hamburger_panel );
@@ -829,7 +831,7 @@ class Techt_Hamburger_Panel extends Techt_Base {
 		return '<div id="elementor-widget-template-empty-templates">
 				<div class="elementor-widget-template-empty-templates-icon"><i class="eicon-nerd"></i></div>
 				<div class="elementor-widget-template-empty-templates-title">' . esc_html__( 'You Haven’t Saved Templates Yet.', 'petrona' ) . '</div>
-				<div class="elementor-widget-template-empty-templates-footer">' . esc_html__( 'What is Library?', 'petrona' ) . ' <a class="elementor-widget-template-empty-templates-footer-url" href="https://go.elementor.com/docs-library/" target="_blank">' . esc_html__( 'Read our tutorial on using Library templates.', 'petrona' ) . '</a></div>
+				<div class="elementor-widget-template-empty-templates-footer">' . esc_html__( 'What is Library?', 'petrona' ) . ' <a class="elementor-widget-template-empty-templates-footer-url" href="https://go.elementor.com/docs-library/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Read our tutorial on using Library templates.', 'petrona' ) . '</a></div>
 				</div>';
 	}
 
@@ -851,7 +853,7 @@ class Techt_Hamburger_Panel extends Techt_Base {
 			esc_url( admin_url( '/edit.php' ) )
 		);
 
-		$new_link = '<span>' . esc_html__( 'Select an existing template or create a ', 'petrona' ) . '</span><a class="techt-new-template-link elementor-clickable" href="' . $url . '" target="_blank">' . esc_html__( 'new one', 'petrona' ) . '</a>' ;
+		$new_link = '<span>' . esc_html__( 'Select an existing template or create a ', 'petrona' ) . '</span><a class="techt-new-template-link elementor-clickable" href="' . $url . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'new one', 'petrona' ) . '</a>' ;
 
 		return sprintf(
 			'<div class="techt-no-template-message">%1$s%2$s</div>',

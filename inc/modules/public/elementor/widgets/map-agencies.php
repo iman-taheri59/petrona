@@ -72,7 +72,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $this->start_controls_section(
             'section_settings',
             [
-                'label' => __('Settings', 'plugin-name'),
+                'label' => __('Settings', 'petrona'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -82,7 +82,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $this->add_control(
             'active_province',
             [
-                'label' => __('Active Province (Initial)', 'plugin-name'),
+                'label' => __('Active Province (Initial)', 'petrona'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $provinces_list,
                 'default' => 'ir-th',
@@ -94,9 +94,9 @@ class Techt_Map_Agencies extends Widget_Base {
         $agency_repeater->add_control(
             'agency_name',
             [
-                'label' => __('Agency Name', 'plugin-name'),
+                'label' => __('Agency Name', 'petrona'),
                 'type' => Controls_Manager::TEXT,
-                'default' => __('Agency name', 'plugin-name'),
+                'default' => __('Agency name', 'petrona'),
                 'label_block' => true,
             ]
         );
@@ -104,7 +104,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $agency_repeater->add_control(
             'agency_address',
             [
-                'label' => __('Address', 'plugin-name'),
+                'label' => __('Address', 'petrona'),
                 'type' => Controls_Manager::TEXTAREA,
                 'default' => '',
             ]
@@ -115,7 +115,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $province_repeater->add_control(
             'province_key',
             [
-                'label' => __('Select Province', 'plugin-name'),
+                'label' => __('Select Province', 'petrona'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $provinces_list,
                 'default' => 'ir-th',
@@ -126,7 +126,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $province_repeater->add_control(
             'agencies',
             [
-                'label' => __('Agencies', 'plugin-name'),
+                'label' => __('Agencies', 'petrona'),
                 'type' => Controls_Manager::REPEATER,
                 'fields' => $agency_repeater->get_controls(),
                 'default' => [],
@@ -137,7 +137,7 @@ class Techt_Map_Agencies extends Widget_Base {
         $this->add_control(
             'provinces',
             [
-                'label' => __('Provinces with Agencies', 'plugin-name'),
+                'label' => __('Provinces with Agencies', 'petrona'),
                 'type' => Controls_Manager::REPEATER,
                 'fields' => $province_repeater->get_controls(),
                 'default' => [],
