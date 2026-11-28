@@ -16,7 +16,7 @@ $sale_badge_position = $settings['sale_badge_position'];
 $featured_badge_position = $settings['featured_badge_position'];
 $top_rating_badge_position = $settings['top_rating_badge_position'];
 $best_selling_badge_position = $settings['best_selling_badge_position'];
-$badge_text = esc_html__( 'Sale!', 'powerpack' );
+$badge_text = esc_html__( 'Sale!', 'petrona' );
 $badge_text = apply_filters( 'woocommerce_sale_flash', $badge_text, $post, $product );
 
 if ( 'left' === $sale_badge_position ) {
@@ -59,7 +59,7 @@ if ( 'left' === $sale_badge_position ) {
 
 if ( 'left' === $featured_badge_position ) {
 
-	$badge_text = esc_html__( 'New', 'powerpack' );
+	$badge_text = esc_html__( 'New', 'petrona' );
 
 	if ( '' !== $settings['featured_badge_custom_text'] ) {
 		$badge_text = $settings['featured_badge_custom_text'];
@@ -74,7 +74,7 @@ if ( 'left' === $featured_badge_position ) {
 
 if ( 'left' === $top_rating_badge_position ) {
 
-	$badge_text = esc_html__( 'Top Rated', 'powerpack' );
+	$badge_text = esc_html__( 'Top Rated', 'petrona' );
 
 	if ( '' !== $settings['top_rating_badge_custom_text'] ) {
 		$badge_text = $settings['top_rating_badge_custom_text'];
@@ -86,7 +86,7 @@ if ( 'left' === $top_rating_badge_position ) {
 }
 
 if ( 'left' === $best_selling_badge_position ) {
-	$badge_text = esc_html__( 'Best Selling', 'powerpack' );
+	$badge_text = esc_html__( 'Best Selling', 'petrona' );
 
 	if ( '' !== $settings['best_selling_badge_custom_text'] ) {
 		$badge_text = $settings['best_selling_badge_custom_text'];

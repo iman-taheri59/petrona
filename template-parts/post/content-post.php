@@ -24,7 +24,7 @@ if($page_type  == "single"){
         }
     }
 }
-if( is_sticky() && !is_paged() && $page_type ='archive' ) { ?>
+if( is_sticky() && !is_paged() && $page_type === 'archive' ) { ?>
     <div class="col-lg-12 big-items">    
         <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> >
             <div class="row align-items-center">
@@ -55,7 +55,7 @@ if( is_sticky() && !is_paged() && $page_type ='archive' ) { ?>
                             <?php } ?>
         
                             <?php if( 'title' == $element ) { 
-                                if($page_type = 'archive'){
+                                if($page_type === 'archive'){
                                      /* translators: %s: Permalinks of Posts */
                                     the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); 
                                 }else{
@@ -65,7 +65,7 @@ if( is_sticky() && !is_paged() && $page_type ='archive' ) { ?>
                             } ?>
                             
                             <?php if( 'content' == $element ) {
-                                if($page_type = 'archive'){ 
+                                if($page_type === 'archive'){ 
                                     ?>
                                         <div class="entry-content"<?php techt_schema_markup('entry_content') ?>>
                                             <?php echo Techt_Utility::postexcerpt( Techt_Utility::theme_options(array('excerpt_length', 25)) ); ?>

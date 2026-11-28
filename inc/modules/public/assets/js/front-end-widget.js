@@ -1554,7 +1554,8 @@
 					'dev'           : window.techt_hamburger_panel_settings.devMode,
 					'cachedTemplate': cachedTemplate,
 					'widget_id'     : widgetId,
-					'signature'     : signature
+					'signature'     : signature,
+					'nonce'         : window.techt_hamburger_panel_settings.addonsNonce
 				},
 				beforeSend: function( jqXHR ) {
 					jqXHR.setRequestHeader( 'X-WP-Nonce', window.techt_hamburger_panel_settings.restNonce );

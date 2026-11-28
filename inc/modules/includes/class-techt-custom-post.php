@@ -262,8 +262,8 @@ class Techt_Custom_post {
 			'preloader' 	=> __( 'Preloader',  'petrona' ),
 		);
 	
-		if ( ! empty( $_REQUEST[ 'template_type' ] ) ) {
-			$current_type = $_REQUEST[ 'template_type' ];
+		if ( ! empty( $_REQUEST['template_type'] ) ) {
+			$current_type = sanitize_key( wp_unslash( $_REQUEST['template_type'] ) );
 			$active_class = '';
 		}
 	
@@ -294,12 +294,14 @@ class Techt_Custom_post {
 	*/
 	public function sort_templates_by_meta_value($query) {
 		global $pagenow;
-		if (is_admin() && $pagenow=='edit.php' &&
-			isset($_GET['post_type']) && $_GET['post_type']=='petrona_templates' &&
-			isset($_GET['template_type']) && $query->query['post_type'] == 'petrona_templates') {
-			$query->query_vars['orderby'] = 'meta_value';
-			$query->query_vars['meta_key'] = 'petrona_template_types';
-			$query->query_vars['meta_value'] = $_GET['template_type'];
+		$post_type     = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '';
+		$template_type = isset( $_GET['template_type'] ) ? sanitize_key( wp_unslash( $_GET['template_type'] ) ) : '';
+
+		if ( is_admin() && 'edit.php' === $pagenow && 'petrona_templates' === $post_type && $template_type
+			&& isset( $query->query['post_type'] ) && 'petrona_templates' === $query->query['post_type'] ) {
+			$query->query_vars['orderby']    = 'meta_value';
+			$query->query_vars['meta_key']   = 'petrona_template_types';
+			$query->query_vars['meta_value'] = $template_type;
 		}
 	}
 

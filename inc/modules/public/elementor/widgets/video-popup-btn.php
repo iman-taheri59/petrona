@@ -122,7 +122,7 @@ class Techt_Video_Popup_btn_Widget extends Techt_Base {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'box_shadow',
-				'label' => esc_html__( 'Box Shadow', 'plugin-domain' ),
+				'label' => esc_html__( 'Box Shadow', 'petrona' ),
 				'selector' =>'{{WRAPPER}} .video-box .ripple, .video-box .ripple::before, .video-box .ripple::after',
 			]
 		);	

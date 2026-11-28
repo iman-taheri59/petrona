@@ -486,7 +486,21 @@ abstract class Techt_Base extends Widget_Base {
 		$roles     = isset( $wp_roles->roles ) ? $wp_roles->roles : array();
 		$all_roles = array();
 
+		/*
+		 * SECURITY: this widget is rendered on public pages and its selection is
+		 * used for self-registration, so only low-privilege roles may be offered.
+		 * Privileged roles are never listed in the builder UI.
+		 */
+		$safe_roles = apply_filters(
+			'petrona_allowed_self_registration_roles',
+			array( get_option( 'default_role', 'subscriber' ), 'subscriber' )
+		);
+		$safe_roles = array_map( 'sanitize_key', (array) $safe_roles );
+
 		foreach ( $roles as $role_key => $role ) {
+			if ( ! in_array( $role_key, $safe_roles, true ) ) {
+				continue;
+			}
 			$all_roles[ $role_key ] = $role['name'];
 		}
 
@@ -778,7 +792,7 @@ abstract class Techt_Base extends Widget_Base {
 		// 		get_permalink( $template_id )
 		// 	);
 		// 	$edit_link = sprintf(
-		// 		'<a class="techt-edit-template-link" href="%s" title="%s" target="_blank"><span class="dashicons dashicons-edit"></span></a>',
+		// 		'<a class="techt-edit-template-link" href="%s" title="%s" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-edit"></span></a>',
 		// 		esc_url( $edit_url ),
 		// 		esc_html__( 'Edit Template', 'luxin' )
 		// 	);

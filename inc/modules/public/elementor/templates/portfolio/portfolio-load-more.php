@@ -5,7 +5,7 @@
    			Techt_Core_Utility::pagination($portfolio_query, $settings);  
    		} else {
    			if( $settings['more_works_btn_link'] ) {		
-	   			$target = $settings['more_works_btn_link']['is_external'] ? ' target="_blank"' : '';
+	   			$target = $settings['more_works_btn_link']['is_external'] ? ' target="_blank" rel="noopener noreferrer"' : '';
 	   			$nofollow = $settings['more_works_btn_link']['nofollow'] ? ' rel="nofollow"' : '';
    			} 
    		?>

@@ -30,7 +30,7 @@ $best_selling_badge_position = $settings['best_selling_badge_position'];
 $quick_view_type = $settings['quick_view_type'];
 $quick_view_text = $settings['quick_view_text'];
 if ( '' === $quick_view_text ) {
-	$quick_view_text = esc_html__( 'Quick View', 'powerpack' );
+	$quick_view_text = esc_html__( 'Quick View', 'petrona' );
 }
 $image_size = $settings['thumbnail_size'];
 if ( 'custom' === $image_size ) {
@@ -43,7 +43,7 @@ if ( ! $image_size ) {
 	$image_size = 'woocommerce_thumbnail';
 }
 $out_of_stock        = get_post_meta( $post_id, '_stock_status', true );
-$out_of_stock_string = apply_filters( 'pp_woo_out_of_stock_string', ( $settings['out_of_stock_text'] ? $settings['out_of_stock_text'] : esc_html__( 'Out of Stock', 'powerpack' ) ) );
+$out_of_stock_string = apply_filters( 'pp_woo_out_of_stock_string', ( $settings['out_of_stock_text'] ? $settings['out_of_stock_text'] : esc_html__( 'Out of Stock', 'petrona' ) ) );
 
 $product_class = '';
 if ( 'slider' === $settings['products_layout_type'] ) {
@@ -75,7 +75,7 @@ if ( 'slider' === $settings['products_layout_type'] ) {
 
 		if ( 'yes' === $settings['link_image'] ) {
 			if ( 'yes' === $settings['link_image_target'] ) {
-				echo '<a href="' . esc_url( get_the_permalink() ) . '" target="_blank" class="woocommerce-LoopProduct-link">';
+				echo '<a href="' . esc_url( get_the_permalink() ) . '" target="_blank" rel="noopener noreferrer" class="woocommerce-LoopProduct-link">';
 			} else {
 				woocommerce_template_loop_product_link_open();
 			}
@@ -167,7 +167,7 @@ if ( 'slider' === $settings['products_layout_type'] ) {
 						if ( 'yes' === $settings['link_title'] ) {
 
 							if ( 'yes' === $settings['link_title_target'] ) {
-								$target = 'target="_blank"';
+								$target = 'target="_blank" rel="noopener noreferrer"';
 							} else {
 								$target = '';
 							}

@@ -53,7 +53,10 @@ class Techt_Elementor_Widget
 		add_action( 'wp_ajax_get_posts_by_query', array( $this, 'get_posts_by_query' ) );
 		add_action( 'wp_ajax_get_posts_title_by_id', array( $this, 'get_posts_title_by_id' ) );
 
-		add_action( 'wp_ajax_nopriv_get_techt_template_content', array( $this, 'get_techt_template_content' ) );
+		/*
+		 * SECURITY: `nopriv` removed. This endpoint renders arbitrary Elementor
+		 * templates and could be abused to render content that is not published.
+		 */
 		add_action( 'wp_ajax_get_techt_template_content', array( $this, 'get_techt_template_content' ) );
 
 		if (!class_exists('ElementorPro\Plugin')) {
@@ -320,8 +323,25 @@ class Techt_Elementor_Widget
 
 	public function admin_scripts()
 	{
-		echo '<script> var techt_ajax_url = "' . admin_url("admin-ajax.php") . '";
-		var techt_nonce = "' . wp_create_nonce("techt-addons") . '";</script>';
+		/*
+		 * SECURITY: this used to print an admin-ajax URL and a valid nonce for every
+		 * front-end visitor. The payload is only useful inside the Elementor
+		 * editor/preview, so it is now limited to users who can actually edit.
+		 */
+		if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
+		$data = array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'techt-addons' ),
+		);
+
+		printf(
+			'<script id="techt-addons-data">window.techt_ajax_url = %1$s; window.techt_nonce = %2$s;</script>',
+			wp_json_encode( esc_url_raw( $data['ajax_url'] ) ),
+			wp_json_encode( $data['nonce'] )
+		);
 	}
 
 	public function enqueue_flaticon_css() {
@@ -377,20 +397,40 @@ class Techt_Elementor_Widget
 	 */
 	public function get_posts_title_by_id() {
 
-		$ids = isset( $_POST['id'] ) ? $_POST['id'] : array();
+		// SECURITY: editor-only endpoint; it used to leak titles of any post,
+		// including drafts and private ones, to unauthenticated visitors.
+		check_ajax_referer( 'techt-addons', 'nonce' );
 
-		$results = [];
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to do this.', 'petrona' ) ), 403 );
+		}
+
+		$ids = isset( $_POST['id'] ) ? (array) $_POST['id'] : array();
+		$ids = array_filter( array_map( 'absint', $ids ) );
+
+		$results = array();
+
+		if ( empty( $ids ) ) {
+			wp_send_json( $results );
+		}
 
 		$query = new \WP_Query(
-			[
-				'post_type'      => 'any',
-				'post__in'       => $ids,
-				'posts_per_page' => -1,
-			]
+			array(
+				'post_type'              => 'any',
+				'post__in'               => $ids,
+				'posts_per_page'         => count( $ids ),
+				'post_status'            => array( 'publish' ),
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'suppress_filters'       => false,
+			)
 		);
 
 		foreach ( $query->posts as $post ) {
-			$results[ $post->ID ] = $post->post_title;
+			if ( current_user_can( 'read_post', $post->ID ) ) {
+				$results[ $post->ID ] = $post->post_title;
+			}
 		}
 
 		// return the results in json.
@@ -404,8 +444,15 @@ class Techt_Elementor_Widget
 	 */
 	public function get_posts_by_query() {
 
-		$search_string = isset( $_POST['q'] ) ? sanitize_text_field( $_POST['q'] ) : '';
-		$req_post_type = isset( $_POST['post_type'] ) ? sanitize_text_field( $_POST['post_type'] ) : 'all';
+		// SECURITY: editor-only endpoint, previously had no nonce/capability check.
+		check_ajax_referer( 'techt-addons', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to do this.', 'petrona' ) ), 403 );
+		}
+
+		$search_string = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
+		$req_post_type = isset( $_POST['post_type'] ) ? sanitize_key( wp_unslash( $_POST['post_type'] ) ) : 'all';
 
 		$data   = array();
 		$result = array();
@@ -551,7 +598,7 @@ class Techt_Elementor_Widget
 		$widget_data = $this->find_element_recursive( $meta, $widget_id );
 
 		$data = array(
-			'message'    => esc_html__( 'Saved', 'powerpack' ),
+			'message'    => esc_html__( 'Saved', 'petrona' ),
 			'ID'         => '',
 			'skin_id'    => '',
 			'html'       => '',
@@ -576,15 +623,28 @@ class Techt_Elementor_Widget
 	public function get_techt_template_content($request){
 		// $args = $request->get_params();
 
-		$template_id = ! empty( $_POST['id'] ) ? $_POST['id'] : false;
+		// SECURITY: nonce + capability checks were missing entirely.
+		check_ajax_referer( 'techt-addons', 'nonce' );
 
-		$dev = filter_var( $_POST['dev'], FILTER_VALIDATE_BOOLEAN ) ? true : false;
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to do this.', 'petrona' ) ), 403 );
+		}
+
+		$template_id = ! empty( $_POST['id'] ) ? absint( $_POST['id'] ) : false;
+
+		$dev = isset( $_POST['dev'] ) && filter_var( wp_unslash( $_POST['dev'] ), FILTER_VALIDATE_BOOLEAN );
 
 		if ( ! $template_id ) {
 			return false;
 		}
 
-		$is_cached_template = isset( $_POST['cachedTemplate'] ) ?  $_POST['cachedTemplate'] : true;
+		$template_post = get_post( $template_id );
+
+		if ( ! $template_post || ! current_user_can( 'read_post', $template_id ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You are not allowed to do this.', 'petrona' ) ), 403 );
+		}
+
+		$is_cached_template = isset( $_POST['cachedTemplate'] ) ? absint( $_POST['cachedTemplate'] ) : true;
 
 		$cached = apply_filters( 'techt/rest/endpoint/elementor-template/cached', $is_cached_template, $template_id );
 

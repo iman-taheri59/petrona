@@ -32,14 +32,14 @@ $id_suffix = wp_unique_id();
 			<?php else : ?>
 				<span><?php echo esc_html__( 'Sorting:', 'petrona' ); ?></span>
 			<?php endif; ?>
-			<span><?php echo $catalog_orderby_options[$orderby] ?></span>
+			<span><?php echo esc_html( $catalog_orderby_options[ $orderby ] ); ?></span>
 		</div>
 		<div class="dropdown-content">
 			<?php foreach ( $catalog_orderby_options as $id => $name ) : 
 				$link = sprintf('?orderby=%1$s', $id);
 				$active = $orderby == $id ? 'active' : '';
 				?>
-				<a href="<?php echo $link; ?>" class="list-item <?php echo $active; ?>"><?php echo $name; ?></a>
+				<a href="<?php echo esc_url( $link ); ?>" class="list-item <?php echo esc_attr( $active ); ?>"><?php echo esc_html( $name ); ?></a>
 			<?php endforeach; ?>
 		</div>
 	</div>

@@ -16,7 +16,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
     }
 
     public function get_title() {
-        return __('Iran Provinces Map (Leaflet)', 'plugin-name');
+        return __('Iran Provinces Map (Leaflet)', 'petrona');
     }
 
     public function get_icon() {
@@ -39,7 +39,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $this->start_controls_section(
             'section_settings',
             [
-                'label' => __('Settings', 'plugin-name'),
+                'label' => __('Settings', 'petrona'),
             ]
         );
 
@@ -56,7 +56,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $this->add_control(
             'active_province',
             [
-                'label' => __('Active Province (Initial)', 'plugin-name'),
+                'label' => __('Active Province (Initial)', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $provinces_list,
                 'default' => '05',
@@ -68,9 +68,9 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $agency_repeater->add_control(
             'agency_name',
             [
-                'label' => __('Agency Name', 'plugin-name'),
+                'label' => __('Agency Name', 'petrona'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('Agency name', 'plugin-name'),
+                'default' => __('Agency name', 'petrona'),
                 'label_block' => true,
             ]
         );
@@ -78,7 +78,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $agency_repeater->add_control(
             'agency_address',
             [
-                'label' => __('Address', 'plugin-name'),
+                'label' => __('Address', 'petrona'),
                 'type' => \Elementor\Controls_Manager::TEXTAREA,
                 'default' => '',
             ]
@@ -89,7 +89,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $province_repeater->add_control(
             'province_key',
             [
-                'label' => __('Select Province', 'plugin-name'),
+                'label' => __('Select Province', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $provinces_list,
                 'default' => '05',
@@ -100,7 +100,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $province_repeater->add_control(
             'agencies',
             [
-                'label' => __('Agencies', 'plugin-name'),
+                'label' => __('Agencies', 'petrona'),
                 'type' => \Elementor\Controls_Manager::REPEATER,
                 'fields' => $agency_repeater->get_controls(),
                 'default' => [],
@@ -111,7 +111,7 @@ class Techt_Map_Agencies_1 extends Widget_Base {
         $this->add_control(
             'provinces',
             [
-                'label' => __('Provinces with Agencies', 'plugin-name'),
+                'label' => __('Provinces with Agencies', 'petrona'),
                 'type' => \Elementor\Controls_Manager::REPEATER,
                 'fields' => $province_repeater->get_controls(),
                 'default' => [],

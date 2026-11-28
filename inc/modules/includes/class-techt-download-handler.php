@@ -58,8 +58,13 @@ if ( ! class_exists( 'Techt_Download_Handler' ) ) {
 		 * @return string
 		 */
 		public function get_download_link( $id = 0 ) {
+			$id = absint( $id );
+
 			return add_query_arg(
-				array( $this->hook() => absint( $id ) ),
+				array(
+					$this->hook() => $id,
+					'_wpnonce'    => wp_create_nonce( 'petrona_download_' . $id ),
+				),
 				esc_url( home_url( '/' ) )
 			);
 		}
@@ -97,13 +102,67 @@ if ( ! class_exists( 'Techt_Download_Handler' ) ) {
 				return;
 			}
 
+			/*
+			 * SECURITY: downloading an arbitrary attachment used to be completely
+			 * unauthenticated. Attachments inherit the status of their parent post,
+			 * so private/draft/password protected uploads were downloadable by ID
+			 * enumeration. Access is now checked against the parent post.
+			 */
+			$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+			if ( ! wp_verify_nonce( $nonce, 'petrona_download_' . $id ) ) {
+				wp_die(
+					esc_html__( 'The download link has expired. Please reload the page and try again.', 'petrona' ),
+					esc_html__( 'Invalid download link', 'petrona' ),
+					array( 'response' => 403 )
+				);
+			}
+
 			$post = get_post( $id );
 
-			if ( 'attachment' !== $post->post_type ) {
+			if ( ! $post || 'attachment' !== $post->post_type ) {
 				return;
 			}
 
+			$parent = $post->post_parent ? get_post( $post->post_parent ) : null;
+
+			if ( $parent ) {
+				// Inherit the visibility of the parent post.
+				$allowed_statuses = array( 'publish' );
+
+				if ( is_user_logged_in() && current_user_can( 'read_post', $parent->ID ) ) {
+					$allowed_statuses[] = 'private';
+				}
+
+				if ( ! in_array( $parent->post_status, $allowed_statuses, true ) ) {
+					wp_die(
+						esc_html__( 'You are not allowed to download this file.', 'petrona' ),
+						esc_html__( 'Forbidden', 'petrona' ),
+						array( 'response' => 403 )
+					);
+				}
+
+				if ( post_password_required( $parent ) ) {
+					wp_die(
+						esc_html__( 'This file belongs to a protected post.', 'petrona' ),
+						esc_html__( 'Forbidden', 'petrona' ),
+						array( 'response' => 403 )
+					);
+				}
+			} elseif ( ! is_user_logged_in() || ! current_user_can( 'upload_files' ) ) {
+				// Unattached media is private by definition.
+				wp_die(
+					esc_html__( 'You are not allowed to download this file.', 'petrona' ),
+					esc_html__( 'Forbidden', 'petrona' ),
+					array( 'response' => 403 )
+				);
+			}
+
 			$file_path = get_attached_file( $id );
+
+			if ( ! $file_path ) {
+				return;
+			}
 
 			if ( ! is_file( $file_path ) ) {
 				return;
@@ -130,16 +189,43 @@ if ( ! class_exists( 'Techt_Download_Handler' ) ) {
 					break;
 			}
 
-			header( 'Pragma: public' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', @filemtime( $file_path ) ) . ' GMT' );
-			header( 'Cache-Control: private', false );
+			// Prefer the registered mime type; fall back to an explicit allow list.
+			$mime = get_post_mime_type( $id );
+
+			if ( ! $mime ) {
+				switch ( strtolower( (string) pathinfo( $file_path, PATHINFO_EXTENSION ) ) ) {
+					case 'pdf':
+						$mime = 'application/pdf';
+						break;
+					case 'zip':
+						$mime = 'application/zip';
+						break;
+					case 'jpeg':
+					case 'jpg':
+						$mime = 'image/jpeg';
+						break;
+					default:
+						$mime = 'application/octet-stream';
+						break;
+				}
+			}
+
+			/*
+			 * SECURITY: the file name is attacker influenced and must not be able to
+			 * break out of the header (CR/LF injection). basename() alone does not
+			 * strip control characters.
+			 */
+			$filename = sanitize_file_name( basename( $file_path ) );
+			$filename = preg_replace( '/[\r\n]+/', '', $filename );
+			$filename = str_replace( '"', '', (string) $filename );
+
+			nocache_headers();
+
+			header( 'X-Content-Type-Options: nosniff' );
 			header( 'Content-Type: ' . $mime );
-			header( 'Content-Disposition: attachment; filename="' . basename( $file_path ) . '"' );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Content-Length: ' . @filesize( $file_path ) );
-			header( 'Connection: close' );
+			header( 'Content-Length: ' . (int) filesize( $file_path ) );
 
 			$this->readfile_chunked( $file_path );
 

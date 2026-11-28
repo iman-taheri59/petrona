@@ -127,7 +127,7 @@ class Techt_Progressbar extends Widget_Base {
 		$this->add_control(
 			'bar_height',
 			[
-				'label' => __( 'Height', 'plugin-domain' ),
+				'label' => __( 'Height', 'petrona' ),
 				'type' => \Elementor\Controls_Manager::NUMBER,
 				'min' => 1,
 				'max' => 20,

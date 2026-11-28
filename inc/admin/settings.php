@@ -1,21 +1,18 @@
 <?php
-// $rtlLicenseClassName  = 'RTL_License_a8a91f9370d0e954';
-// $rtlLicenseFilePath   = __DIR__ . DIRECTORY_SEPARATOR . $rtlLicenseClassName . '.php';
-// $rtlLicenseFileHash   = @sha1_file($rtlLicenseFilePath);
+/**
+ * Petrona admin settings.
+ *
+ * The previous revision of this file contained an obfuscated (ionCube) licence
+ * loader. It has been removed: the theme must never ship unreviewable code and
+ * must not depend on the ionCube PHP extension. All customizer and settings
+ * registration now runs unconditionally.
+ *
+ * @package Petrona
+ */
 
-// if ( $rtlLicenseFileHash === '33b26d8e6e228fbfefe2e8c893b961749dae8dda' && file_exists($rtlLicenseFilePath) ) {
-// 	require_once $rtlLicenseFilePath;
-
-// 	if ( class_exists($rtlLicenseClassName) && method_exists($rtlLicenseClassName, 'isActive') ) {
-// 		$rtlLicenseClass = new $rtlLicenseClassName();
-
-// 		if ( $rtlLicenseClass->{'isActive'}() === true ) {
-			petrona_init_customizer();
-			add_action('admin_init', 'petrona_init_options' );
-			add_action('admin_menu', 'petrona_add_setting_page');
-// 		}
-// 	}
-// }
+petrona_init_customizer();
+add_action( 'admin_init', 'petrona_init_options' );
+add_action( 'admin_menu', 'petrona_add_setting_page' );
 
 function petrona_init_customizer(){
     
@@ -97,7 +94,7 @@ function petrona_recaptcha_page() {
 }
 
 function recap_section_text_fn() {
-	echo '<p>' . __('Note: <a href="https://www.google.com/recaptcha/intro/v3.html" target="_blank">reCAPTCHA v3</a> is a free service by Google that protects your website from spam and abuse.', 'petrona') . '</p>';
+	echo '<p>' . __('Note: <a href="https://www.google.com/recaptcha/intro/v3.html" target="_blank" rel="noopener noreferrer">reCAPTCHA v3</a> is a free service by Google that protects your website from spam and abuse.', 'petrona') . '</p>';
 }
 
 function site_key_recaptcha_string_fn() {

@@ -59,7 +59,7 @@ add_theme_support( 'html5', array(
  * @since 1.0
  */
 add_theme_support( 'custom-background', apply_filters( 'techt_custom_background_args', array (
-    'default-color' => 'fff',
+    'default-color' => 'ffffff',
     'default-image' => '',
 ) ) );
 

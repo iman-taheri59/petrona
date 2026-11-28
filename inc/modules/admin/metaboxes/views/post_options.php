@@ -1,3 +1,4 @@
+<?php $this->nonce_field(); ?>
 <ul class="techt_metabox_tabs">
 	<li class="active"><a href="#header"><?php echo esc_html__( "Header", 'petrona' ) ?></a></li>
 	<li><a href="#sidebars"><?php echo esc_html__( "Sidebars", 'petrona' ) ?></a></li>

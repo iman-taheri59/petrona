@@ -37,23 +37,23 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->start_controls_section(
             'section_general',
             [
-                'label' => __('تنظیمات عمومی', 'elementor-iran-map'),
+                'label' => __('تنظیمات عمومی', 'petrona'),
             ]
         );
 
         $this->add_control(
             'map_title',
             [
-                'label' => __('عنوان نقشه', 'elementor-iran-map'),
+                'label' => __('عنوان نقشه', 'petrona'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('نقشه ایران', 'elementor-iran-map'),
+                'default' => __('نقشه ایران', 'petrona'),
             ]
         );
 
         $this->add_control(
             'map_height',
             [
-                'label' => __('ارتفاع نقشه (px)', 'elementor-iran-map'),
+                'label' => __('ارتفاع نقشه (px)', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -77,7 +77,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'map_width',
             [
-                'label' => __('عرض نقشه (%)', 'elementor-iran-map'),
+                'label' => __('عرض نقشه (%)', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['%'],
                 'range' => [
@@ -101,7 +101,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'active_province',
             [
-                'label' => __('استان فعال پیش‌فرض', 'elementor-iran-map'),
+                'label' => __('استان فعال پیش‌فرض', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_provinces(),
                 'default' => '',
@@ -114,7 +114,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->start_controls_section(
             'section_colors',
             [
-                'label' => __('تنظیمات رنگ', 'elementor-iran-map'),
+                'label' => __('تنظیمات رنگ', 'petrona'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -122,7 +122,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'normal_color',
             [
-                'label' => __('رنگ پیش‌فرض استان‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ پیش‌فرض استان‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#90cdf4',
             ]
@@ -131,7 +131,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'hover_color',
             [
-                'label' => __('رنگ هاور', 'elementor-iran-map'),
+                'label' => __('رنگ هاور', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ff7f00',
             ]
@@ -140,7 +140,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'selected_color',
             [
-                'label' => __('رنگ استان انتخاب شده', 'elementor-iran-map'),
+                'label' => __('رنگ استان انتخاب شده', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ff0000',
             ]
@@ -149,7 +149,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'border_color',
             [
-                'label' => __('رنگ حاشیه استان‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ حاشیه استان‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ffffff',
             ]
@@ -158,7 +158,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'border_width',
             [
-                'label' => __('ضخامت حاشیه (px)', 'elementor-iran-map'),
+                'label' => __('ضخامت حاشیه (px)', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -181,7 +181,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->start_controls_section(
             'section_text',
             [
-                'label' => __('تنظیمات متن', 'elementor-iran-map'),
+                'label' => __('تنظیمات متن', 'petrona'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -189,7 +189,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'province_label_color',
             [
-                'label' => __('رنگ نام استان‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ نام استان‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#333333',
             ]
@@ -198,7 +198,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'province_label_font_size',
             [
-                'label' => __('اندازه فونت نام استان‌ها (px)', 'elementor-iran-map'),
+                'label' => __('اندازه فونت نام استان‌ها (px)', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -218,7 +218,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'delegation_title_color',
             [
-                'label' => __('رنگ عنوان نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ عنوان نمایندگی‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#222222',
                 'selectors' => [
@@ -230,7 +230,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'delegation_text_color',
             [
-                'label' => __('رنگ متن نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ متن نمایندگی‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#444444',
                 'selectors' => [
@@ -243,7 +243,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'delegation_typography',
-                'label' => __('تایپوگرافی متن نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('تایپوگرافی متن نمایندگی‌ها', 'petrona'),
                 'selector' => '{{WRAPPER}} .iran-map-delegations',
             ]
         );
@@ -254,7 +254,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->start_controls_section(
             'section_delegations',
             [
-                'label' => __('نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('نمایندگی‌ها', 'petrona'),
             ]
         );
 
@@ -263,7 +263,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $repeater->add_control(
             'province',
             [
-                'label' => __('استان', 'elementor-iran-map'),
+                'label' => __('استان', 'petrona'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => $this->get_provinces(),
                 'default' => 'tehran',
@@ -273,7 +273,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $repeater->add_control(
             'name',
             [
-                'label' => __('نام نمایندگی', 'elementor-iran-map'),
+                'label' => __('نام نمایندگی', 'petrona'),
                 'type' => \Elementor\Controls_Manager::TEXT,
                 'default' => '',
             ]
@@ -282,7 +282,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $repeater->add_control(
             'address',
             [
-                'label' => __('آدرس', 'elementor-iran-map'),
+                'label' => __('آدرس', 'petrona'),
                 'type' => \Elementor\Controls_Manager::TEXTAREA,
                 'default' => '',
             ]
@@ -291,7 +291,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'delegations',
             [
-                'label' => __('نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('نمایندگی‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::REPEATER,
                 'fields' => $repeater->get_controls(),
                 'title_field' => '{{{ name }}} - {{{ province }}}',
@@ -304,7 +304,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->start_controls_section(
             'section_advanced',
             [
-                'label' => __('تنظیمات پیشرفته', 'elementor-iran-map'),
+                'label' => __('تنظیمات پیشرفته', 'petrona'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -312,7 +312,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'delegations_bg',
             [
-                'label' => __('رنگ پس‌زمینه لیست نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('رنگ پس‌زمینه لیست نمایندگی‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#f9f9f9',
                 'selectors' => [
@@ -324,7 +324,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'delegations_padding',
             [
-                'label' => __('حاشیه داخلی لیست نمایندگی‌ها', 'elementor-iran-map'),
+                'label' => __('حاشیه داخلی لیست نمایندگی‌ها', 'petrona'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors' => [
@@ -343,7 +343,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
         $this->add_control(
             'map_border_radius',
             [
-                'label' => __('شعاع حاشیه نقشه', 'elementor-iran-map'),
+                'label' => __('شعاع حاشیه نقشه', 'petrona'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors' => [
@@ -365,7 +365,7 @@ class Techt_Map_Agencies_2 extends Widget_Base {
             \Elementor\Group_Control_Box_Shadow::get_type(),
             [
                 'name' => 'map_shadow',
-                'label' => __('سایه نقشه', 'elementor-iran-map'),
+                'label' => __('سایه نقشه', 'petrona'),
                 'selector' => '{{WRAPPER}} .iran-map-container',
             ]
         );
@@ -375,38 +375,38 @@ class Techt_Map_Agencies_2 extends Widget_Base {
 
     protected function get_provinces() {
         return [
-            '' => __('هیچکدام', 'elementor-iran-map'),
-            'ir-ea' => __('آذربایجان شرقی', 'elementor-iran-map'),
-            'ir-wa' => __('آذربایجان غربی', 'elementor-iran-map'),
-            'ir-ar' => __('اردبیل', 'elementor-iran-map'),
-            'ir-es' => __('اصفهان', 'elementor-iran-map'),
-            'ir-al' => __('البرز', 'elementor-iran-map'),
-            'ir-il' => __('ایلام', 'elementor-iran-map'),
-            'ir-bs' => __('بوشهر', 'elementor-iran-map'),
-            'ir-th' => __('تهران', 'elementor-iran-map'),
-            'ir-cm' => __('چهارمحال و بختیاری', 'elementor-iran-map'),
-            'ir-kj' => __('خراسان جنوبی', 'elementor-iran-map'),
-            'ir-kv' => __('خراسان رضوی', 'elementor-iran-map'),
-            'ir-ks' => __('خراسان شمالی', 'elementor-iran-map'),
-            'ir-kh' => __('خوزستان', 'elementor-iran-map'),
-            'ir-za' => __('زنجان', 'elementor-iran-map'),
-            'ir-sm' => __('سمنان', 'elementor-iran-map'),
-            'ir-sb' => __('سیستان و بلوچستان', 'elementor-iran-map'),
-            'ir-fa' => __('فارس', 'elementor-iran-map'),
-            'ir-qz' => __('قزوین', 'elementor-iran-map'),
-            'ir-qm' => __('قم', 'elementor-iran-map'),
-            'ir-kd' => __('کردستان', 'elementor-iran-map'),
-            'ir-ke' => __('کرمان', 'elementor-iran-map'),
-            'ir-bk' => __('کرمانشاه', 'elementor-iran-map'),
-            'ir-kb' => __('کهگیلویه و بویراحمد', 'elementor-iran-map'),
-            'ir-go' => __('گلستان', 'elementor-iran-map'),
-            'ir-gi' => __('گیلان', 'elementor-iran-map'),
-            'ir-lo' => __('لرستان', 'elementor-iran-map'),
-            'ir-mn' => __('مازندران', 'elementor-iran-map'),
-            'ir-mk' => __('مرکزی', 'elementor-iran-map'),
-            'ir-hg' => __('هرمزگان', 'elementor-iran-map'),
-            'ir-hd' => __('همدان', 'elementor-iran-map'),
-            'ir-ya' => __('یزد', 'elementor-iran-map'),
+            '' => __('هیچکدام', 'petrona'),
+            'ir-ea' => __('آذربایجان شرقی', 'petrona'),
+            'ir-wa' => __('آذربایجان غربی', 'petrona'),
+            'ir-ar' => __('اردبیل', 'petrona'),
+            'ir-es' => __('اصفهان', 'petrona'),
+            'ir-al' => __('البرز', 'petrona'),
+            'ir-il' => __('ایلام', 'petrona'),
+            'ir-bs' => __('بوشهر', 'petrona'),
+            'ir-th' => __('تهران', 'petrona'),
+            'ir-cm' => __('چهارمحال و بختیاری', 'petrona'),
+            'ir-kj' => __('خراسان جنوبی', 'petrona'),
+            'ir-kv' => __('خراسان رضوی', 'petrona'),
+            'ir-ks' => __('خراسان شمالی', 'petrona'),
+            'ir-kh' => __('خوزستان', 'petrona'),
+            'ir-za' => __('زنجان', 'petrona'),
+            'ir-sm' => __('سمنان', 'petrona'),
+            'ir-sb' => __('سیستان و بلوچستان', 'petrona'),
+            'ir-fa' => __('فارس', 'petrona'),
+            'ir-qz' => __('قزوین', 'petrona'),
+            'ir-qm' => __('قم', 'petrona'),
+            'ir-kd' => __('کردستان', 'petrona'),
+            'ir-ke' => __('کرمان', 'petrona'),
+            'ir-bk' => __('کرمانشاه', 'petrona'),
+            'ir-kb' => __('کهگیلویه و بویراحمد', 'petrona'),
+            'ir-go' => __('گلستان', 'petrona'),
+            'ir-gi' => __('گیلان', 'petrona'),
+            'ir-lo' => __('لرستان', 'petrona'),
+            'ir-mn' => __('مازندران', 'petrona'),
+            'ir-mk' => __('مرکزی', 'petrona'),
+            'ir-hg' => __('هرمزگان', 'petrona'),
+            'ir-hd' => __('همدان', 'petrona'),
+            'ir-ya' => __('یزد', 'petrona'),
         ];
     }
 

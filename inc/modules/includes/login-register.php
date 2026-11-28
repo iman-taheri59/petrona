@@ -83,21 +83,15 @@ function techt_login_social_app( $name, $email, $post_id, $widget_id, $type = ''
 
 			update_user_meta( $user_ID, 'techt_login_form', $user_meta );
 			
-			if(!empty($post_id) && !empty($widget_id)){
-				$elementor = \Elementor\Plugin::$instance;			
-				$meta_data = $elementor->documents->get( $post_id )->get_elements_data();
-				
-				$widget_data = techt_get_element_widget_data( $meta_data, $widget_id );
-				
-				$widget_settings = $elementor->elements_manager->create_element_instance( $widget_data );
-				
-				$get_settings = $widget_settings->get_settings();
-				
-				if(!empty($get_settings) && !empty($get_settings['user_role'])){
-					$role = $get_settings['user_role'];
-					if(!empty($role)){
-						wp_update_user( array ('ID' => $user_ID, 'role' => $role) ) ;
-					}
+			/*
+			 * SECURITY: social sign-up must obey the same role whitelist as regular
+			 * registration. Previously the role was read straight from widget
+			 * settings referenced by client supplied ids (privilege escalation).
+			 */
+			if ( ! empty( $post_id ) && ! empty( $widget_id ) ) {
+				$role = techt_get_registration_role_from_widget( $post_id, $widget_id );
+				if ( $role ) {
+					wp_update_user( array( 'ID' => $user_ID, 'role' => $role ) );
 				}
 			}
 			
@@ -254,7 +248,8 @@ function techt_google_ajax_register() {
 		$email      = isset( $_POST['email'] ) ? sanitize_email($_POST['email']) : '';
 		$page_id	=	(isset($_POST['page_id'])) ? sanitize_text_field( $_POST['page_id'] ) : '';
 		$widget_id	=	(isset($_POST['widget_id'])) ? sanitize_text_field( $_POST['widget_id'] ) : '';
-		$id_token = filter_input( INPUT_POST, 'id_token', FILTER_SANITIZE_STRING );
+		// FILTER_SANITIZE_STRING was deprecated in PHP 8.1 and removed in PHP 8.2.
+		$id_token = isset( $_POST['id_token'] ) ? sanitize_text_field( wp_unslash( $_POST['id_token'] ) ) : '';
 		$google_data= get_option( 'techt_api_connection_data' );
 		$client_id = (!empty($google_data['techt_google_client_id'])) ? $google_data['techt_google_client_id'] : '';
 		$verified = techt_verify_google_data_user( $id_token, $client_id );
@@ -439,38 +434,146 @@ if(!empty($_REQUEST['forgoturl'])){
 }
 
 function techt_redirect_to_custom_password_reset() {
-		
-    if ( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
-        // Verify key / login combo
-		 
-        $user = check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );		
-        if ( ! $user || is_wp_error( $user ) ) {
-            if ( $user && $user->get_error_code() === 'expired_key' ) {
-				$redirect_url = $_REQUEST['forgoturl'];
-				$redirect_url = add_query_arg( 'expired', 'expired', $redirect_url );
-				wp_redirect($redirect_url);
-            } else {
-				$redirect_url = $_REQUEST['forgoturl'];
-				$redirect_url = add_query_arg( 'invalid', 'invalid', $redirect_url );
-				wp_redirect($redirect_url);
-            }
-            exit;
-        }
-		if(!empty($_REQUEST['redirecturl'])){
-			
-			$redirect_url = $_REQUEST['redirecturl'];
-			$redirect_url = add_query_arg( 'login', esc_attr( $_REQUEST['login'] ), $redirect_url );
-			$redirect_url = add_query_arg( 'key', esc_attr( $_REQUEST['key'] ), $redirect_url );
-			$redirect_url = add_query_arg( 'action', 'techtrpf', $redirect_url );
-			$redirect_url = add_query_arg( 'forgoturl', $_REQUEST['forgoturl'], $redirect_url );
-			wp_redirect($redirect_url);
-		}else{
-			wp_redirect(home_url());
+
+	if ( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
+
+		$key   = isset( $_REQUEST['key'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['key'] ) ) : '';
+		$login = isset( $_REQUEST['login'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['login'] ) ) : '';
+
+		/*
+		 * SECURITY: `forgoturl` and `redirecturl` come from the query string. They
+		 * used to be passed straight into wp_redirect(), which made this an open
+		 * redirect. Every target is now constrained to this site.
+		 */
+		$forgot_url   = isset( $_REQUEST['forgoturl'] ) ? esc_url_raw( wp_unslash( $_REQUEST['forgoturl'] ) ) : '';
+		$redirect_url = isset( $_REQUEST['redirecturl'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirecturl'] ) ) : '';
+
+		$forgot_url   = $forgot_url ? wp_validate_redirect( $forgot_url, home_url( '/' ) ) : home_url( '/' );
+		$redirect_url = $redirect_url ? wp_validate_redirect( $redirect_url, home_url( '/' ) ) : '';
+
+		// Verify key / login combo
+		$user = check_password_reset_key( $key, $login );
+
+		if ( ! $user || is_wp_error( $user ) ) {
+			if ( $user && $user->get_error_code() === 'expired_key' ) {
+				wp_safe_redirect( add_query_arg( 'expired', 'expired', $forgot_url ) );
+			} else {
+				wp_safe_redirect( add_query_arg( 'invalid', 'invalid', $forgot_url ) );
+			}
+			exit;
 		}
-        exit;
-    }
+
+		if ( ! empty( $redirect_url ) ) {
+			$redirect_url = add_query_arg( 'login', rawurlencode( $login ), $redirect_url );
+			$redirect_url = add_query_arg( 'key', rawurlencode( $key ), $redirect_url );
+			$redirect_url = add_query_arg( 'action', 'techtrpf', $redirect_url );
+			$redirect_url = add_query_arg( 'forgoturl', rawurlencode( $forgot_url ), $redirect_url );
+			wp_safe_redirect( $redirect_url );
+		} else {
+			wp_safe_redirect( home_url() );
+		}
+		exit;
+	}
 }
 /*reset password end*/
+
+/**
+ * Resolve the role a newly self-registered user may receive.
+ *
+ * SECURITY: the role must never be taken from client supplied input
+ * ($_POST['user_role']) or from arbitrary Elementor widget settings, and it must
+ * never exceed the default registration role. Previously this function read the
+ * role from the widget settings of an arbitrary page/widget id supplied by the
+ * visitor, which allowed privilege escalation up to Administrator.
+ *
+ * @param string $requested Role requested by the (untrusted) form or widget.
+ * @return string A role that is safe for public self-registration.
+ */
+function techt_sanitize_self_registration_role( $requested = '' ) {
+	$default_role = get_option( 'default_role', 'subscriber' );
+
+	/**
+	 * Filter the roles that may be handed out on public self-registration.
+	 * Anything not in this list is silently downgraded to the default role.
+	 *
+	 * @param string[] $allowed Allowed role slugs.
+	 */
+	$allowed = apply_filters( 'petrona_allowed_self_registration_roles', array( $default_role, 'subscriber' ) );
+	$allowed = array_map( 'sanitize_key', (array) $allowed );
+
+	$requested = sanitize_key( $requested );
+
+	if ( ! $requested || ! in_array( $requested, $allowed, true ) ) {
+		$requested = in_array( $default_role, $allowed, true ) ? $default_role : 'subscriber';
+	}
+
+	return $requested;
+}
+
+/**
+ * Read the role configured in an Elementor widget, with capability safeguards.
+ *
+ * Only a user who is allowed to promote users can ever make a widget hand out a
+ * role above the safe self-registration set, and the widget must be attached to
+ * a page that is actually published.
+ *
+ * @param int    $post_id   Page/post ID containing the widget.
+ * @param string $widget_id Elementor element ID.
+ * @return string A safe role slug.
+ */
+function techt_get_registration_role_from_widget( $post_id, $widget_id ) {
+	$safe_role = techt_sanitize_self_registration_role();
+
+	if ( empty( $post_id ) || empty( $widget_id ) || ! class_exists( '\Elementor\Plugin' ) ) {
+		return $safe_role;
+	}
+
+	$post_id   = absint( $post_id );
+	$post      = $post_id ? get_post( $post_id ) : null;
+	$widget_id = sanitize_text_field( wp_unslash( $widget_id ) );
+
+	// The referenced document must exist, be published and be readable by anyone.
+	if ( ! $post || 'publish' !== $post->post_status || ! is_post_publicly_viewable( $post ) ) {
+		return $safe_role;
+	}
+
+	$elementor = \Elementor\Plugin::$instance;
+	$document  = $elementor->documents->get( $post_id );
+
+	if ( ! $document ) {
+		return $safe_role;
+	}
+
+	$meta_data = $document->get_elements_data();
+	$widget    = techt_get_element_widget_data( $meta_data, $widget_id );
+
+	if ( empty( $widget ) || empty( $widget['widgetType'] ) || 'techt-login-register' !== $widget['widgetType'] ) {
+		return $safe_role;
+	}
+
+	$widget_settings = $elementor->elements_manager->create_element_instance( $widget );
+
+	if ( ! $widget_settings ) {
+		return $safe_role;
+	}
+
+	$settings      = $widget_settings->get_settings();
+	$requested     = isset( $settings['user_role'] ) ? $settings['user_role'] : '';
+	$verified_role = techt_sanitize_self_registration_role( $requested );
+
+	/*
+	 * A role outside the safe set may only be granted when the request itself was
+	 * made by a user who is allowed to promote users (e.g. an admin testing the
+	 * form). Otherwise it is downgraded.
+	 */
+	if ( $requested && $verified_role !== sanitize_key( $requested ) ) {
+		if ( current_user_can( 'promote_users' ) && get_role( sanitize_key( $requested ) ) ) {
+			return sanitize_key( $requested );
+		}
+	}
+
+	return $verified_role;
+}
 
 function techt_ajax_register_user( $email='', $first_name='', $last_name='',$tp_user_role='' ) {
 	    $errors = new \WP_Error();
@@ -520,34 +623,24 @@ function techt_ajax_register_user( $email='', $first_name='', $last_name='',$tp_
 		if ( ! $user_id_get ) {
 			$user_id = wp_insert_user( $user_data );
 			if(empty($_POST['tceo'])){
-				if(!empty($_POST["dis_password"]) && $_POST["dis_password"]=='no'){
-					wp_new_user_notification( $user_id, null, 'both' );
-				}else{
-					wp_new_user_notification( $user_id, null, 'both' );
-				}
+				wp_new_user_notification( $user_id, null, 'both' );
 			}
 			
-			$tp_user_role='subscriber';
-			$post_id   = $_POST['page_id'];
-			$widget_id = $_POST['widget_id'];
-						
-			$elementor = \Elementor\Plugin::$instance;			
-			$meta_data      = $elementor->documents->get( $post_id )->get_elements_data();
-			
-			$widget_data = techt_get_element_widget_data( $meta_data, $widget_id );
-			
-			$widget_settings = $elementor->elements_manager->create_element_instance( $widget_data );
-			
-			$get_settings = $widget_settings->get_settings();
-			
-			if(!empty($get_settings) && !empty($get_settings['user_role'])){
-				$tp_user_role = $get_settings['user_role'];
-			}
-			wp_update_user( array ('ID' => $user_id, 'role' => $tp_user_role) ) ;
+			/*
+			 * SECURITY: the role is derived server-side. Client supplied
+			 * page_id/widget_id may only ever lower or keep the safe default; it can
+			 * never be used to obtain a role above the self-registration whitelist.
+			 */
+			$post_id   = isset( $_POST['page_id'] ) ? absint( $_POST['page_id'] ) : 0;
+			$widget_id = isset( $_POST['widget_id'] ) ? sanitize_text_field( wp_unslash( $_POST['widget_id'] ) ) : '';
+			$tp_user_role = techt_get_registration_role_from_widget( $post_id, $widget_id );
+
+			wp_update_user( array( 'ID' => $user_id, 'role' => $tp_user_role ) );
 		}
 		
 	    return $user_id;
 }
+
 if(get_option('users_can_register')){
 	add_action( 'wp_ajax_nopriv_techt_ajax_register', 'techt_ajax_register' );
 }
